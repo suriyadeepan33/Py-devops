@@ -1,5 +1,5 @@
 
-name: Py_devops CI/CD Pipeline
+name: Py_devops CI/CD Pipeline - Docker Hub
 
 on:
   push:

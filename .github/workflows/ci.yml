@@ -1,5 +1,5 @@
 
-name: Py_devops CI Pipeline
+name: Py_devops CI/CD Pipeline
 
 on:
   push:
@@ -27,4 +27,22 @@ jobs:
         run: python -m pytest -v
 
       - name: Build Docker image
-        run: docker build -t py-devops:v1 .
+        run: docker build -t py-devops:${{ github.sha }} .
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            suriyadeepan22/py-devops:latest
+            suriyadeepan22/py-devops:${{ github.sha }}
+

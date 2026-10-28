@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: disk-health-check
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: disk-health-check
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: health-checker
+          image: py-devops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "app.main"]
+

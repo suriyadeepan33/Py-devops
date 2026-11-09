@@ -1,0 +1,30 @@
+
+name: Self Hosted Runner Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/runner-test.yml'
+
+jobs:
+  test-runner:
+    runs-on: self-hosted
+
+    steps:
+      - name: Verify runner
+        run: |
+          echo "GitHub self-hosted runner is working!"
+          hostname
+
+      - name: Check Docker
+        run: docker --version
+
+      - name: Check Kubernetes context
+        run: kubectl config current-context
+
+      - name: Check Kubernetes nodes
+        run: kubectl get nodes
+
+      - name: Verify Minikube
+        run: minikube status

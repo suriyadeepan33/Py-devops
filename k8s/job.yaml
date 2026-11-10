@@ -13,6 +13,6 @@ spec:
       containers:
         - name: health-checker
           image: suriyadeepan22/py-devops:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command: ["python", "-m", "app.main"]
 

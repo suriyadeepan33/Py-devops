@@ -1,5 +1,4 @@
-
-name: Py_devops CI/CD Pipeline - Docker Hub
+name: Py_devops CI/CD Pipeline - Docker Hub and Kubernetes
 
 on:
   push:
@@ -46,3 +45,26 @@ jobs:
             suriyadeepan22/py-devops:latest
             suriyadeepan22/py-devops:${{ github.sha }}
 
+  deploy-to-minikube:
+    needs: test-and-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Verify Kubernetes connection
+        run: kubectl get nodes
+
+      - name: Remove previous health-check Job
+        run: kubectl delete job disk-health-check --ignore-not-found=true
+
+      - name: Deploy health-check Job
+        run: kubectl apply -f k8s/job.yaml
+
+      - name: Wait for Job completion
+        run: kubectl wait --for=condition=complete job/disk-health-check --timeout=180s
+
+      - name: Display health-check results
+        run: kubectl logs job/disk-health-check

@@ -12,7 +12,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: health-checker
-          image: suriyadeepan22/py-devops:latest
+          image: suriyadeepan22/py-devops:v2
           imagePullPolicy: Always
           command: ["python", "-m", "app.main"]
 
